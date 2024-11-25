@@ -6,7 +6,8 @@ df = pd.read_csv("googleplaystore.csv")
 # 2. Seleccionar columnas relevantes
 columns_to_keep = [
     "App",  # Nombre de la aplicación
-    "Category",  # Categoría de la app (Juegos, Social, etc.)
+    "Genres",  # Géneros de la app
+    "Category",  # Categoría de la app
     "Rating",  # Calificación (1-5 estrellas)
     "Reviews",  # Número de reseñas
     "Size",  # Tamaño de la app
@@ -16,6 +17,7 @@ columns_to_keep = [
     "Content Rating",  # Clasificación de contenido (Everyone, Teen, etc.)
 ]
 df = df[columns_to_keep]  # Crear nuevo DataFrame solo con estas columnas
+
 
 # 3. Limpiar Rating
 # Ejemplo de datos en Rating: 4.1, 4.5, NaN, 'Varies with device'
@@ -39,7 +41,31 @@ df["Price"] = df["Price"].str.replace("$", "")
 df["Price"] = pd.to_numeric(df["Price"], errors="coerce")
 # Resultado: 0.99, 0, 2.99, NaN
 
-# 6. Guardar dataset limpio
+
+# 6. Limpiar Category
+def clean_category(category):
+    """
+    Limpia y formatea el nombre de la categoría:
+    HOUSE_AND_HOME -> House and Home
+    """
+    # Reemplazar guiones bajos por espacios y convertir a título
+    return category.replace("_", " ").title()
+
+
+df["Category"] = df["Category"].apply(clean_category)
+
+# 7. Eliminar duplicados manteniendo la versión con más instalaciones
+print("\nAntes de eliminar duplicados:", len(df))
+# Ordenar por instalaciones y eliminar duplicados
+df = (
+    df.sort_values("Installs", ascending=False)
+    .reset_index(drop=True)  # Resetear índice después de ordenar
+    .drop_duplicates(subset=["App"], keep="first")
+)
+print("Después de eliminar duplicados:", len(df))
+
+
+# 8. Guardar dataset limpio
 df.to_csv("googleplaystore_cleaned.csv", index=False)
 # - Guarda el DataFrame en un nuevo archivo CSV
 # - index=False evita guardar los números de fila
