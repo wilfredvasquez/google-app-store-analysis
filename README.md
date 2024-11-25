@@ -39,3 +39,15 @@ Ejecutar el archivo python clean_dataset.py. El hará la limpieza necesaria y ge
 ```
 python3 clean_dataset.py
 ```
+
+## Análisis de datos
+
+Ejecutar el archivo python main.py. El hará el análisis de los datos y generará gráficos de los resultados.
+
+```
+python3 main.py
+```
+
+# Fuentes de información
+
+- https://www.kaggle.com/datasets/gourab8889/play-store-apps-dataset?resource=download
