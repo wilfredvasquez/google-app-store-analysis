@@ -22,8 +22,8 @@ print(df.describe())
 # 4. Métricas básicas
 print("\n=== MÉTRICAS BÁSICAS ===")
 # Apps por categoría
-category_counts = df["Category"].value_counts()
-print("\nNúmero de apps por categoría:")
+category_counts = df["Category"].value_counts().head(10)
+print("\nNúmero de apps por categoría (top 10):")
 print(category_counts)
 
 # Rango de descargas
@@ -36,8 +36,8 @@ avg_rating_by_category = (
     df.groupby("Category")["Rating"]
     .agg(["mean", "count"])
     .sort_values("mean", ascending=False)
-)
-print("\n=== CALIFICACIÓN PROMEDIO POR CATEGORÍA ===")
+).head(10)
+print("\n=== CALIFICACIÓN PROMEDIO POR CATEGORÍA (TOP 10) ===")
 print(avg_rating_by_category)
 
 # 6. Análisis por tipo (Free vs Paid)
@@ -47,10 +47,10 @@ type_analysis = (
 )
 print(type_analysis)
 
-# 7. Relación precio-calificación
-price_rating_corr = df["Price"].corr(df["Rating"])
-print("\n=== CORRELACIÓN PRECIO-RATING ===")
-print(f"Correlación: {price_rating_corr:.2f}")
+# 7. Relación descargas-reviews
+descargas_reviews_corr = df["Installs"].corr(df["Reviews"])
+print("\n=== CORRELACIÓN DESCARGAS-REVIEWS ===")
+print(f"Correlación: {descargas_reviews_corr:.2f}")
 
 # 8. Resumen final
 print("\n=== RESUMEN DE HALLAZGOS ===")
