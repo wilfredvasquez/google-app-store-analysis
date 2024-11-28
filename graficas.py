@@ -51,7 +51,7 @@ def graficar(df):
 
     # Gráfico 3: Top 10 apps más descargadas
     # ---------------------------------------
-    # Obtener top 10 apps más descargadas
+    # Obtener top 10 apps más descargadas y mostrar sus reviews
     top_10_apps = df.nlargest(10, "Installs")[
         ["App", "Category", "Installs", "Rating", "Reviews"]
     ]
@@ -59,30 +59,29 @@ def graficar(df):
     print(top_10_apps)
 
     plt.subplot2grid((2, 2), (1, 0), colspan=2)
-    bars = plt.bar(top_10_apps["App"], top_10_apps["Installs"])
+    bars = plt.bar(top_10_apps["App"], top_10_apps["Rating"])  # Cambiado a Reviews
+
     # Colorear las barras por categoría
     categories = top_10_apps["Category"].unique()
     color_map = dict(zip(categories, plt.cm.Set3(np.linspace(0, 1, len(categories)))))
-    for bar, category, rating, reviews in zip(
-        bars, top_10_apps["Category"], top_10_apps["Rating"], top_10_apps["Reviews"]
+    for bar, category, reviews, installs in zip(
+        bars, top_10_apps["Category"], top_10_apps["Reviews"], top_10_apps["Installs"]
     ):
         bar.set_color(color_map[category])
-        # Agregar el rating sobre cada barra
+        # Agregar el número de reviews sobre cada barra
         height = bar.get_height()
         plt.text(
             bar.get_x() + bar.get_width() / 2.0,
             bar.get_y() + height / 2.0,
-            f"Rating:\n{rating:.1f}\n\nReviews:\n{reviews:,}",
+            f"Reviews:\n{reviews:,}",
             ha="center",
             va="bottom",
         )
 
-    plt.title("Top de Aplicaciones más Descargadas")
+    plt.title("Rating de las Apps más Descargadas con más de 1B de Descargas")
     plt.xlabel("Aplicación")
-    plt.ylabel("Número de Descargas")
+    plt.ylabel("Rating")
     plt.xticks(rotation=45, ha="right")
-    # Mejorar el formato del eje y
-    plt.gca().yaxis.set_major_formatter(plt.FuncFormatter(format_func))
     # Agregar leyenda de categorías
     legend_elements = [
         plt.Rectangle((0, 0), 1, 1, color=color_map[cat]) for cat in categories
@@ -94,12 +93,11 @@ def graficar(df):
         loc="lower right",
         bbox_to_anchor=(1.15, 1),
     )
-    # ---------------------------------------
 
     plt.tight_layout()
     plt.show()
 
-    # Tercera página de gráficos
+    # Segunda página de gráficos
     # ---------------------------------------
     plt.figure(figsize=(15, 10))
 
